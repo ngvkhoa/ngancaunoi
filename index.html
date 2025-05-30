@@ -2,8 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>For you</title>
+  <title>For you</title></title>
   <style>
     @font-face {
       font-family: 'Imperial Script';
@@ -23,11 +22,10 @@
       height: 100vh;
       user-select: none;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
     }
     h1 {
-      font-size:5rem;
-      margin-bottom: 50px;
+      font-size: 3rem;
+      margin-bottom: 30px;
       text-shadow: 0 0 15px #FFD700;
       animation: flicker 2s infinite;
     }
@@ -37,7 +35,7 @@
     }
     .progress-container {
       width: 80%;
-      height: 50px;
+      height: 30px;
       background: #222;
       border: 2px solid #FFD700;
       border-radius: 20px;
@@ -60,7 +58,7 @@
       100% { background-position: 100% 0; }
     }
     #tap-to-continue {
-      font-size: 3rem;
+      font-size: 2rem;
       color: #ffeb3b;
       display: none;
       text-shadow: 0 0 15px #fff176;
@@ -124,20 +122,15 @@
       // Hiện canvas 3D
       threeContainer.style.display = 'block';
 
-      // Play nhạc (iOS cần tương tác người dùng trước khi phát)
-      const playAudio = () => {
-        bgm.play().catch(e => console.log('Autoplay prevented:', e));
-      };
-      
-      // Thêm sự kiện touchstart để xử lý phát nhạc trên iOS
-      document.body.addEventListener('touchstart', playAudio, { once: true });
-      document.body.addEventListener('click', playAudio, { once: true });
+      // Play nhạc
+      bgm.play().catch(() => {
+        console.warn('Trình duyệt chặn phát nhạc');
+      });
 
       // --- Bắt đầu code ThreeJS ---
 
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.domElement.style.position = 'fixed';
       threeContainer.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
@@ -187,7 +180,7 @@
         ctx.shadowColor = "#FFD700";
         ctx.shadowBlur = 80;
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = "bold 175px 'Imperial Script', cursive";
+        ctx.font = "bold 160px 'Imperial Script', cursive";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
@@ -254,31 +247,25 @@
 
       animate();
 
-      // Xử lý sự kiện di chuyển (cho cả desktop và mobile)
-      const updateMousePosition = (clientX, clientY) => {
-        mouse.x = (clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(clientY / window.innerHeight) * 2 + 1;
-      };
-
-      window.addEventListener('mousemove', (e) => updateMousePosition(e.clientX, e.clientY));
-      window.addEventListener('touchmove', (e) => updateMousePosition(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+      window.addEventListener('mousemove', (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      });
 
       window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
+
     }
 
-    // Xử lý sự kiện bắt đầu (cho cả click và touch)
-    const handleStart = () => {
+    document.body.addEventListener('click', () => {
       if (loadingDone) {
         startThreeJS();
       }
-    };
-
-    document.body.addEventListener('click', handleStart, { once: true });
-    document.body.addEventListener('touchstart', handleStart, { once: true });
+    }, { once: true });
   </script>
+
 </body>
 </html>
