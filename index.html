@@ -228,14 +228,6 @@
           }
         });
 
-        // Hiệu ứng sao chớp
-        const positions = starsGeometry.attributes.position;
-        for (let i = 0; i < positions.count; i++) {
-          const flicker = (Math.random() - 0.5) * 0.2;
-          positions.array[i*3+2] += flicker;
-        }
-        positions.needsUpdate = true;
-
         // Hover phát hiện
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(textCards);
