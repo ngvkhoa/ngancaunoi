@@ -154,11 +154,14 @@
       controls.enableDamping = true;
 
       const loiChuc = [
-        "Anh yêu em", "Iu em mò", "Linh thấy sao Linh",
-        "Thơm tui miếng", "Nhớ em gòi", "Khoa qua đón em nha", "ui ui ui",
-        "Thơm tui miếng", "Nhớ em gòi", "Em iu ơiiiiii", "Ai mà xinh thế",
-        "Yêu em Linh", "Linh làm người iu tui nha", "dễ thương hăm", "Em iu đừng dận anh nữa",
-        "Ỏ", "Đổ rồi Linh ơi", "Hai một cún",
+        "Anh yêu em", "Iu em mò", "Nhớ em gòi", "Thơm tui miếng", "Yêu em Linh", "Miss you so much",
+        "Anh yêu em", "Iu em mò", "Nhớ em gòi", "Thơm tui miếng", "Yêu em Linh", "Miss you so much",
+        "Anh yêu em", "Iu em mò", "Nhớ em gòi", "Thơm tui miếng", "Yêu em Linh", "Miss you so much",
+
+        "Nhớ em gòi", "Khoa qua đón em nha", "ui ui ui",
+        "Linh thấy sao Linh", "Em iu ơiiiiii", "Ai mà xinh thế",
+        "Linh làm người iu tui nha", "dễ thương hăm", "Can we tie the knot?",
+        "Ỏooo", "Đổ rồi Linh ơi", "Hai một cún",
       ];
 
       const textCards = [];
@@ -200,7 +203,7 @@
         basePositions.push(new THREE.Vector3(x, y, z));
       };
 
-      for (let i = 0; i < 500; i++) {
+      for (let i = 0; i < 450; i++) {
         const text = loiChuc[Math.floor(Math.random() * loiChuc.length)];
         const radius = 180 * Math.cbrt(Math.random());
         const theta = Math.random() * 2 * Math.PI;
