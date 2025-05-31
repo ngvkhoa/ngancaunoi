@@ -143,11 +143,11 @@
       // Sao
       const starsGeometry = new THREE.BufferGeometry();
       const starsVertices = [];
-      for (let i = 0; i < 3000; i++) {
+      for (let i = 0; i < 2000; i++) {
         starsVertices.push((Math.random() - 0.5) * 2000, (Math.random() - 0.5) * 2000, (Math.random() - 0.5) * 2000);
       }
       starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
-      const starsMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.8 });
+      const starsMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.3 });
       const stars = new THREE.Points(starsGeometry, starsMaterial);
       scene.add(stars);
 
