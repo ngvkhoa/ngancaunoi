@@ -20,7 +20,10 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      user-select: none;
+      user-select: none; /* bạn có rồi */
+      -webkit-user-select: none; /* thêm cái này cho chắc */
+      -webkit-touch-callout: none; /* thêm cho iOS */
+      -webkit-tap-highlight-color: transparent; /* tắt màu highlight khi nhấn trên iOS */
       cursor: pointer;
     }
     h1 {
