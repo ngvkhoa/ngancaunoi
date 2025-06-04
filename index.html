@@ -21,11 +21,10 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      user-select: none; /* bạn có rồi */
-      -webkit-user-select: none; /* thêm cái này cho chắc */
-      -webkit-touch-callout: none; /* thêm cho iOS */
-      -webkit-tap-highlight-color: transparent; /* tắt màu highlight khi nhấn trên iOS */
-      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
     h1 {
       font-size: 5rem;
@@ -61,22 +60,29 @@
       0% { background-position: 0% 0; }
       100% { background-position: 100% 0; }
     }
-    #tap-to-continue {
-      font-size: 3rem;
-      color: #ffeb3b;
-      display: none;
-      text-shadow: 0 0 15px #fff176;
-      animation: pulse 1.8s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.7; }
-      50% { transform: scale(1.1); opacity: 1; }
-    }
     #three-container {
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       z-index: 10;
+    }
+    #sound-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(0,0,0,0.5);
+      border: 2px solid #FFD700;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #FFD700;
+      font-size: 24px;
+      box-shadow: 0 0 10px #FFD700;
     }
   </style>
 </head>
@@ -86,9 +92,9 @@
   <div class="progress-container">
     <div class="progress-bar" id="progressBar"></div>
   </div>
-  <div id="tap-to-continue">Nhấp vào màn hình để tiếp tục</div>
 
   <div id="three-container"></div>
+  <div id="sound-toggle">🔇</div>
 
   <audio id="bgm" src="sound.mp3" loop></audio>
 
@@ -97,13 +103,13 @@
 
   <script>
     const progressBar = document.getElementById('progressBar');
-    const tapToContinue = document.getElementById('tap-to-continue');
     const loadingText = document.getElementById('loading-text');
     const threeContainer = document.getElementById('three-container');
     const bgm = document.getElementById('bgm');
+    const soundToggle = document.getElementById('sound-toggle');
 
     let progress = 0;
-    let loadingDone = false;
+    let isSoundOn = false;
 
     // Animate progress bar
     const interval = setInterval(() => {
@@ -113,26 +119,38 @@
         progressBar.style.width = progress + '%';
       } else {
         clearInterval(interval);
-        loadingDone = true;
-        tapToContinue.style.display = 'block';
+        startThreeJS();
       }
     }, 120);
 
+    // Sound toggle functionality
+    soundToggle.addEventListener('click', () => {
+      isSoundOn = !isSoundOn;
+      if (isSoundOn) {
+        bgm.play().catch(e => console.log('Audio play failed:', e));
+        soundToggle.textContent = '🔊';
+      } else {
+        bgm.pause();
+        soundToggle.textContent = '🔇';
+      }
+    });
+
     function startThreeJS() {
-      // Ẩn các phần welcome
+      // Hide loading elements
       loadingText.style.display = 'none';
       progressBar.parentElement.style.display = 'none';
-      tapToContinue.style.display = 'none';
-      // Hiện canvas 3D
+      
+      // Show 3D canvas and sound toggle
       threeContainer.style.display = 'block';
+      soundToggle.style.display = 'flex';
 
-      // Play nhạc
-      bgm.play().catch(() => {
-        console.warn('Trình duyệt chặn phát nhạc');
+      // Try to play music (will be muted until user interacts)
+      bgm.volume = 0.5;
+      bgm.play().catch(e => {
+        console.log('Autoplay prevented, waiting for user interaction');
       });
 
-      // --- Bắt đầu code ThreeJS ---
-
+      // --- ThreeJS code ---
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       threeContainer.appendChild(renderer.domElement);
@@ -140,7 +158,7 @@
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x000000);
 
-      // Sao
+      // Stars
       const starsGeometry = new THREE.BufferGeometry();
       const starsVertices = [];
       for (let i = 0; i < 2000; i++) {
@@ -164,7 +182,7 @@
 
         "Nhớ em gòi", "Khoa qua đón em nha", "ui ui ui",
         "Linh thấy sao Linh", "Em iu ơiiiiii", "Ai mà xinh théeeee",
-        "Linh làm người iu tui nha", "dễ thương hăm", "Can we tie the knot?",
+        "Khoa làm người yêu Linh nha", "dễ thương hăm", "Can we tie the knot?",
         "Ỏooo", "Đổ rồi Linh ơi", "Hai một cún",
       ];
 
@@ -226,7 +244,7 @@
         controls.update();
         let t = clock.getElapsedTime();
 
-        // Chữ bay nhẹ
+        // Floating text animation
         textCards.forEach((card, i) => {
           const base = basePositions[i];
           card.position.y = base.y + Math.sin(t + i) * 1.5;
@@ -235,7 +253,7 @@
           }
         });
 
-        // Hover phát hiện
+        // Hover detection
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(textCards);
         if (intersects.length > 0) {
@@ -261,15 +279,7 @@
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
-
     }
-
-    document.body.addEventListener('click', () => {
-      if (loadingDone) {
-        startThreeJS();
-      }
-    }, { once: true });
   </script>
-
 </body>
 </html>
